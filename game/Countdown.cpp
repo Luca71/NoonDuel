@@ -10,6 +10,8 @@ Countdown::Countdown()
 		mCountTexs.push_back(new Texture(std::to_string(i+1), mGameConfig->mainFont, mGameConfig->CounterFontSize, { COLOR_GRAY }));
 	}
 
+	mText = mCountTexs[0];
+
 	mSwapSpeed = 1.0f;
 	mSwapTimer = mSwapSpeed;
 	mCount = 3;

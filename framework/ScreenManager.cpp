@@ -53,6 +53,7 @@ namespace EasySDL
 			if (mInputMgr->KeyPressed(SDL_SCANCODE_RETURN))
 			{
 				mCurrentScreen = play;
+				mPlayScreen->StartTurn();
 			}
 			break;
 

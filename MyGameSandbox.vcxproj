@@ -153,9 +153,11 @@
     <ClCompile Include="framework\Texture.cpp" />
     <ClCompile Include="framework\Timer.cpp" />
     <ClCompile Include="game\Countdown.cpp" />
+    <ClCompile Include="game\Player.cpp" />
     <ClCompile Include="game\PlayScreen.cpp" />
     <ClCompile Include="game\Scoreboard.cpp" />
     <ClCompile Include="game\StartScreen.cpp" />
+    <ClCompile Include="game\WordsLabel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game\Countdown.h" />
@@ -175,6 +177,8 @@
     <ClInclude Include="game\PlayScreen.h" />
     <ClInclude Include="game\Scoreboard.h" />
     <ClInclude Include="game\StartScreen.h" />
+    <ClInclude Include="game\WordsLabel.h" />
+    <ClInclude Include="game\Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

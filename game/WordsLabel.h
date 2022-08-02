@@ -1,5 +1,5 @@
-#ifndef _COUNTDOWN_H
-#define _COUNTDOWN_H
+#ifndef _WORDSLABEL_H
+#define _WORDSLABEL_H
 #include "../framework/Texture.h"
 #include "../framework/GameConfig.h"
 #include "../framework/Timer.h"
@@ -7,16 +7,19 @@
 
 using namespace EasySDL;
 
-class Countdown : public GameEntity
+class WordsLabel : public GameEntity
 {
 public:
 
-	Countdown();
-	~Countdown();
+	WordsLabel();
+	~WordsLabel();
 
 	void Start();
 	void Update();
 	void Render();
+
+	bool CanShoot();
+	void CanShoot(bool canShoot);
 
 private:
 
@@ -24,14 +27,27 @@ private:
 	GameConfig* mGameConfig;
 	Timer* mTimer;
 
+	bool mCanShoot;
+
 	int mCount;
 	std::vector<Texture*> mCountTexs;
+	std::vector<std::string> mWords;
+
+	Texture* mWordText;
+	Texture* mWordLabel;
+
+	int mCurrentWordIndex;
+	int tempIndex;
 
 	float mSwapTimer;
 	float mSwapSpeed;
 
 	void Reset();
+	void Stop();
 	void ClearTexts();
+	void ClearWords();
+
+	void InitWords();
 };
 
-#endif // _COUNTDOWN_H
+#endif // _WORDSLABEL_H

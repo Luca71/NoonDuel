@@ -29,7 +29,10 @@ namespace EasySDL
 		const int ScoreFontSize = 50;
 		const int TextScoreFontSize = 40;
 		const int CounterFontSize = 200;
+		const int WordsFontSize = 80;
 		const bool isFullScreen = false;
+
+		const int ShootWordsMaxCount = 5;
 	
 	private:
 	
