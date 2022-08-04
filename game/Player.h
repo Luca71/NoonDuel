@@ -25,12 +25,18 @@ public:
 	void CanShoot(bool canShoot);
 	bool CanShoot();
 
+	void IncrementFails();
+	int GetFails();
+	void ResetFails();
+
 private:
 
 	PLAYER_STATE mCurrentState;
 
 	AnimatedTexture* mPlayer;
 	GameConfig* mGameConfig;
+
+	int mFailCount;
 
 	bool mCanShoot;
 

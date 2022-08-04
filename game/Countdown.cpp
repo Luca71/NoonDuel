@@ -15,6 +15,7 @@ Countdown::Countdown()
 	mSwapSpeed = 1.0f;
 	mSwapTimer = mSwapSpeed;
 	mCount = 3;
+
 	Active(false);
 }
 

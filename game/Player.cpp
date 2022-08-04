@@ -5,6 +5,7 @@ Player::Player(std::string idleTex, std::string shootTex, std::string deadTex, V
 	mGameConfig = GameConfig::Instance();
 
 	mCanShoot = true;
+	mFailCount = 0;
 
 	// init state texture
 	AnimatedTexture* temp = new AnimatedTexture(idleTex, 0, 0, 360, 360, 10, 0.5f, AnimatedTexture::horizontal, flipped);
@@ -18,9 +19,9 @@ Player::Player(std::string idleTex, std::string shootTex, std::string deadTex, V
 
 	temp = new AnimatedTexture(deadTex, 0, 0, 360, 360, 7, 0.5f, AnimatedTexture::horizontal, flipped);
 	temp->WrapMode(AnimatedTexture::once);
+	(flipped) ? position.x += 20 : position.x -= 20;
 	temp->Position(position);
 	mStateTextures.push_back(temp);
-	delete temp;
 
 	mCurrentState = Idle;
 	mPlayer = mStateTextures[mCurrentState];
@@ -36,14 +37,13 @@ Player::~Player()
 
 void Player::Update()
 {
-	mPlayer = mStateTextures[mCurrentState];
-	
+	//mPlayer = mStateTextures[mCurrentState];
 	mPlayer->Update();
 }
 
 void Player::Render()
 {
-	mPlayer = mStateTextures[mCurrentState];
+	//mPlayer = mStateTextures[mCurrentState];
 
 	mPlayer->Render();
 }
@@ -56,6 +56,7 @@ void Player::SetPosition(Vector2 pos)
 void Player::SetState(PLAYER_STATE state)
 {
 	mCurrentState = state;
+	mPlayer = mStateTextures[mCurrentState];
 }
 
 int Player::GetState()
@@ -71,4 +72,19 @@ void Player::CanShoot(bool canShoot)
 bool Player::CanShoot()
 {
 	return mCanShoot;
+}
+
+void Player::IncrementFails()
+{
+	mFailCount++;
+}
+
+int Player::GetFails()
+{
+	return mFailCount;
+}
+
+void Player::ResetFails()
+{
+	mFailCount = 0;
 }

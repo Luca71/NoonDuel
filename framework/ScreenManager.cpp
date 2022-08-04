@@ -27,7 +27,7 @@ namespace EasySDL
 		mStartScreen = new StartScreen();
 		mPlayScreen = new PlayScreen();
 
-		mCurrentScreen = play;
+		mCurrentScreen = start;
 	}
 
 	ScreenManager::~ScreenManager()

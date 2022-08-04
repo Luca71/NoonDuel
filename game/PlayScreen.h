@@ -20,6 +20,7 @@ public:
 	void Update();
 	void Render();
 	void StartTurn();
+	void EndTurn();
 
 private:
 
@@ -28,6 +29,9 @@ private:
 	GameConfig* mGameConfig;
 
 	bool mCanShoot;
+
+	enum TURN_STATE { start, running, end };
+	TURN_STATE mCurrentTurnState;
 
 	// Background
 	Texture* mBackground;
@@ -55,6 +59,11 @@ private:
 	// Player 2
 	Player* mPlayer2;
 
+	// Player 1 fails
+	std::vector<Texture*> mP1Fails;
+
+	// Player 2 fails
+	std::vector<Texture*> mP2Fails;
 };
 
 #endif // _PLAYSCREEN_H

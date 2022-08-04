@@ -21,6 +21,9 @@ public:
 	bool CanShoot();
 	void CanShoot(bool canShoot);
 
+	void EndTurn();
+	void Reset();
+
 private:
 
 	Texture* mText;
@@ -28,6 +31,8 @@ private:
 	Timer* mTimer;
 
 	bool mCanShoot;
+	bool mCanSwap;
+	bool mIsTurnEnded;
 
 	int mCount;
 	std::vector<Texture*> mCountTexs;
@@ -35,6 +40,9 @@ private:
 
 	Texture* mWordText;
 	Texture* mWordLabel;
+	Texture* mEndText1;
+	Texture* mEndText2;
+	Texture* mEndText3;
 
 	int mCurrentWordIndex;
 	int tempIndex;
@@ -42,7 +50,6 @@ private:
 	float mSwapTimer;
 	float mSwapSpeed;
 
-	void Reset();
 	void Stop();
 	void ClearTexts();
 	void ClearWords();

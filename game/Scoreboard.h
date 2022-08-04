@@ -16,10 +16,16 @@ public:
 	void Score(int score);
 	void Render();
 
+	int GetScore();
+	void IncrementScore();
+	void ResetScore();
+
 private:
 
 	std::vector<Texture*> mScore;
 	GameConfig* mGameConfig;
+
+	int mCurrentScore;
 
 	void ClearBoard();
 };
