@@ -20,7 +20,11 @@ public:
 	void Update();
 	void Render();
 	void StartTurn();
-	void EndTurn();
+	void EndTurn(bool win);
+	void NewGame();
+
+	enum TURN_STATE { start, running, end, winGame };
+	int GetState();
 
 private:
 
@@ -30,8 +34,10 @@ private:
 
 	bool mCanShoot;
 
-	enum TURN_STATE { start, running, end };
 	TURN_STATE mCurrentTurnState;
+
+	void OnMatchWin(Player* player);
+	bool CheckPlayersScore();
 
 	// Background
 	Texture* mBackground;

@@ -61,6 +61,7 @@ namespace EasySDL
 			mPlayScreen->Update();
 			if (mInputMgr->KeyPressed(SDL_SCANCODE_ESCAPE))
 			{
+				mPlayScreen->NewGame();
 				mCurrentScreen = start;
 			}
 			break;

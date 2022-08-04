@@ -7,7 +7,6 @@ WordsLabel::WordsLabel()
 
 	mCanShoot = false;
 	mCanSwap = true;
-	mIsTurnEnded = false;
 
 	InitWords();
 
@@ -16,16 +15,27 @@ WordsLabel::WordsLabel()
 
 	mWordLabel = new Texture("CentralLabel.png");
 	mWordLabel->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.9f));
+	
+	mEndTextFailed = new Texture("FAILED!", mGameConfig->secondFont, 70, { COLOR_DARKRED });
+	mEndTextFailed->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.5f));
 
+	mEndTextWin = new Texture("YOU WIN THIS MATCH!", mGameConfig->secondFont, 70, { COLOR_DARKRED });
+	mEndTextWin->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.5f));
 
-	mEndText1 = new Texture("FAILED!", mGameConfig->secondFont, 80, { COLOR_DARKRED });
-	mEndText1->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.5f));
+	mPlayerWinGame = new Texture("GAME OVER!", mGameConfig->secondFont, 70, { COLOR_DARKRED });
+	mPlayerWinGame->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.5f));
 
-	mEndText3 = new Texture("\'SPACE\' for next turn", mGameConfig->secondFont, 40, { COLOR_DARKRED });
-	mEndText3->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.6f));
+	mEndTextRestart = new Texture("\'SPACE\' for next turn", mGameConfig->secondFont, 40, { COLOR_DARKRED });
+	mEndTextRestart->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.6f));
 
-	mEndText2 = new Texture("You loose 1 point", mGameConfig->secondFont, 30, { COLOR_DARKRED });
-	mEndText2->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.9f));
+	mWinTextRestart = new Texture("\'ESCAPE\' for new game", mGameConfig->secondFont, 40, { COLOR_DARKRED });
+	mWinTextRestart->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.6f));
+
+	mEndTextLoosePoint = new Texture("You loose 1 point", mGameConfig->secondFont, 30, { COLOR_DARKRED });
+	mEndTextLoosePoint->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.9f));
+
+	mEndTextEarnPoint = new Texture("You earn 1 point", mGameConfig->secondFont, 30, { COLOR_DARKRED });
+	mEndTextEarnPoint->Position(Vector2(mGameConfig->winWidth * 0.5f, mGameConfig->winHeight * 0.9f));
 
 	mSwapSpeed = 1.0f + ((float)rand() / RAND_MAX) * 3.0f;
 	mSwapTimer = mSwapSpeed;
@@ -46,6 +56,20 @@ WordsLabel::~WordsLabel()
 	mWordText = nullptr;
 	delete mWordLabel;
 	mWordLabel = nullptr;
+	delete mEndTextFailed;
+	mEndTextFailed = nullptr;
+	delete mEndTextWin;
+	mEndTextWin = nullptr;
+	delete mPlayerWinGame;
+	mPlayerWinGame = nullptr;
+	delete mEndTextRestart;
+	mEndTextRestart = nullptr;
+	delete mWinTextRestart;
+	mWinTextRestart = nullptr;
+	delete mEndTextLoosePoint;
+	mEndTextLoosePoint = nullptr;
+	delete mEndTextEarnPoint;
+	mEndTextEarnPoint = nullptr;
 }
 
 void WordsLabel::Start()
@@ -64,13 +88,12 @@ void WordsLabel::Update()
 			if (mCount > 0)
 			{
 				mCurrentWordIndex = rand() % mCountTexs.size();
-				
-				// Check if index has been yet extracted;
-				if (mCurrentWordIndex == tempIndex)
+
+				while (mCurrentWordIndex == tempIndex)
 				{
 					mCurrentWordIndex = rand() % mCountTexs.size();
 				}
-
+				
 				// Swap words if not equal to 'shoot'
 				if(mCurrentWordIndex != 0)
 				{
@@ -102,12 +125,21 @@ void WordsLabel::Render()
 		mText->Render();
 	}
 
-	if (mIsTurnEnded)
+	if (mEndTurnState == loose)			// Is game ended with loose?
 	{
-		mEndText1->Render();
-		mEndText3->Render();
+		mEndTextFailed->Render();
+		mEndTextRestart->Render();
 	}
-
+	else if (mEndTurnState == win)
+	{
+		mEndTextWin->Render();
+		mEndTextRestart->Render();
+	}
+	else if (mEndTurnState == winGame)
+	{
+		mPlayerWinGame->Render();
+		mWinTextRestart->Render();
+	}
 }
 
 bool WordsLabel::CanShoot()
@@ -120,11 +152,22 @@ void WordsLabel::CanShoot(bool canShoot)
 	mCanShoot = canShoot;
 }
 
-void WordsLabel::EndTurn()
+void WordsLabel::LooseTurn()
 {
 	Stop();
-	mIsTurnEnded = true;
-	mText = mEndText2;
+	mText = mEndTextLoosePoint;
+}
+
+void WordsLabel::WinTurn()
+{
+	Stop();
+	mText = mEndTextEarnPoint;
+}
+
+void WordsLabel::WinGame()
+{
+	Stop();
+	mText = mEndTextEarnPoint;
 }
 
 void WordsLabel::Stop() // If 'shoot' not yet exit this set mTex to 'shoot' and stop swap
@@ -135,9 +178,42 @@ void WordsLabel::Stop() // If 'shoot' not yet exit this set mTex to 'shoot' and 
 	mCanShoot = true;
 }
 
+void WordsLabel::SetEndTurnState(ENDTURN_STATE state)
+{
+	mEndTurnState = state;
+
+	switch (mEndTurnState)
+	{
+	case win:
+		WinTurn();
+		break;
+
+	case loose:
+		LooseTurn();
+		break;
+
+	case winGame:
+		WinGame();
+		break;
+
+	case none:
+		break;
+	}
+}
+
 void WordsLabel::Reset()
 {
+	mSwapSpeed = 1.0f + ((float)rand() / RAND_MAX) * 3.0f;
+	mSwapTimer = mSwapSpeed;
+
 	mCount = 2 + rand() % mGameConfig->ShootWordsMaxCount;
+
+	mEndTurnState = none;
+
+	mCanSwap = true;
+	mCanShoot = false;
+
+	Active(false);
 }
 
 void WordsLabel::ClearTexts()

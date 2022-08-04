@@ -117,19 +117,74 @@ PlayScreen::~PlayScreen()
 
 void PlayScreen::StartTurn()
 {
-	mCurrentTurnState = running;
-	mCountdown->Start(); // Start countdown
+	// reset players state
+	mPlayer1->SetState(Player::Idle);
+	mPlayer2->SetState(Player::Idle);
+
+	mPlayer1->CanShoot(true);
+	mPlayer2->CanShoot(true);
+
+	mPlayer1->ResetFails();
+	mPlayer2->ResetFails();
+
+	for (int i = 0; i < mP1Fails.size(); i++)
+	{
+		mP1Fails[i]->Active(false);
+	}
+
+	for (int i = 0; i < mP2Fails.size(); i++)
+	{
+		mP2Fails[i]->Active(false);
+	}
+
 	mWordsLabel->Reset();
+	mCurrentTurnState = running;
+	mCountdown->Start();
 }
 
-void PlayScreen::EndTurn()
+void PlayScreen::EndTurn(bool win)
 {
-	// TODO
 	mCurrentTurnState = end;
-	mWordsLabel->EndTurn();
+
+	(win) ? mWordsLabel->SetEndTurnState(WordsLabel::win) : mWordsLabel->SetEndTurnState(WordsLabel::loose);
+
 	mWordsLabel->CanShoot(false);
 	mPlayer1->CanShoot(false);
 	mPlayer2->CanShoot(false);
+}
+
+void PlayScreen::NewGame()
+{
+	mP1Score->ResetScore();
+	mP2Score->ResetScore();
+}
+
+int PlayScreen::GetState()
+{
+	return mCurrentTurnState;
+}
+
+void PlayScreen::OnMatchWin(Player* player)
+{
+	mCurrentTurnState = winGame;
+
+	mWordsLabel->SetEndTurnState(WordsLabel::winGame);
+	mWordsLabel->CanShoot(false);
+	mPlayer1->CanShoot(false);
+	mPlayer2->CanShoot(false);
+}
+
+bool PlayScreen::CheckPlayersScore()
+{
+	if (mP1Score->GetScore() > (mGameConfig->MaxScoreToWin - 1))
+	{ 
+		return true; 
+	}
+	else if (mP2Score->GetScore() > (mGameConfig->MaxScoreToWin - 1))
+	{
+		return true;
+	}
+	return false;
 }
 
 void PlayScreen::Update()
@@ -142,13 +197,15 @@ void PlayScreen::Update()
 			mWordsLabel->CanShoot(false);
 			if (mPlayer1->CanShoot())
 			{
-				mCurrentTurnState = end;
-
 				mP1Score->IncrementScore();
+
+				//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
 				
 				mPlayer1->SetState(Player::Shoot);
 				mPlayer2->CanShoot(false);
 				mPlayer2->SetState(Player::Dead);
+
+				EndTurn(true);
 			}
 		}
 		else if (mInputMgr->KeyPressed(SDL_SCANCODE_L) && mCurrentTurnState == running)
@@ -156,24 +213,21 @@ void PlayScreen::Update()
 			mWordsLabel->CanShoot(false);
 			if (mPlayer2->CanShoot())
 			{
-				mCurrentTurnState = end;
-
 				mP2Score->IncrementScore();
+
+				//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
 
 				mPlayer2->SetState(Player::Shoot);
 				mPlayer1->CanShoot(false);
 				mPlayer1->SetState(Player::Dead);
+
+				EndTurn(true);
 			}
-		}
-
-		if (mInputMgr->KeyPressed(SDL_SCANCODE_A) && mCurrentTurnState == end)
-		{
-
 		}
 	}
 	else
 	{
-		if (mInputMgr->KeyPressed(SDL_SCANCODE_A) && mCurrentTurnState == running)
+		if (mWordsLabel->Active() && mInputMgr->KeyPressed(SDL_SCANCODE_A) && mCurrentTurnState == running)
 		{
 			if (mPlayer1->GetFails() < mP1Fails.size())
 			{
@@ -182,12 +236,15 @@ void PlayScreen::Update()
 			}
 			else
 			{
-				// TODO end turn
-				EndTurn();
 				mP2Score->IncrementScore();
+
+				//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
+
+				EndTurn(false);
+
 			}
 		}
-		else if (mInputMgr->KeyPressed(SDL_SCANCODE_L) && mCurrentTurnState == running)
+		else if (mWordsLabel->Active() && mInputMgr->KeyPressed(SDL_SCANCODE_L) && mCurrentTurnState == running)
 		{
 			if (mPlayer2->GetFails() < mP2Fails.size())
 			{
@@ -196,15 +253,20 @@ void PlayScreen::Update()
 			}
 			else
 			{
-				// TODO end turn
-				EndTurn();
 				mP1Score->IncrementScore();
+
+				//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
+
+				EndTurn(false);
 			}
 		}
+
+		//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
 	}
-	
+
 	mPlayer1->Update();
 	mPlayer2->Update();
+
 	
 	if (mCountdown->Active())	// If countdown is running
 	{
@@ -219,6 +281,13 @@ void PlayScreen::Update()
 	{
 		mWordsLabel->Update();
 	}
+
+	if (mInputMgr->KeyPressed(SDL_SCANCODE_SPACE) && mCurrentTurnState == end)
+	{
+		StartTurn();
+	}
+
+	if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
 }
 
 void PlayScreen::Render()

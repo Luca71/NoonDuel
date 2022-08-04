@@ -33,6 +33,7 @@ namespace EasySDL
 		const bool isFullScreen = false;
 
 		const int ShootWordsMaxCount = 5;
+		const int MaxScoreToWin = 5;
 	
 	private:
 	

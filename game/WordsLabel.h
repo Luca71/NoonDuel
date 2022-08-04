@@ -21,7 +21,9 @@ public:
 	bool CanShoot();
 	void CanShoot(bool canShoot);
 
-	void EndTurn();
+	enum ENDTURN_STATE { none, win, loose, winGame };
+
+	void SetEndTurnState(ENDTURN_STATE state);
 	void Reset();
 
 private:
@@ -32,7 +34,8 @@ private:
 
 	bool mCanShoot;
 	bool mCanSwap;
-	bool mIsTurnEnded;
+
+	ENDTURN_STATE mEndTurnState;
 
 	int mCount;
 	std::vector<Texture*> mCountTexs;
@@ -40,9 +43,17 @@ private:
 
 	Texture* mWordText;
 	Texture* mWordLabel;
-	Texture* mEndText1;
-	Texture* mEndText2;
-	Texture* mEndText3;
+
+	Texture* mEndTextFailed;
+	Texture* mEndTextWin;
+
+	Texture* mPlayerWinGame;
+
+	Texture* mEndTextLoosePoint;
+	Texture* mEndTextEarnPoint;
+
+	Texture* mEndTextRestart;
+	Texture* mWinTextRestart;
 
 	int mCurrentWordIndex;
 	int tempIndex;
@@ -53,6 +64,9 @@ private:
 	void Stop();
 	void ClearTexts();
 	void ClearWords();
+	void LooseTurn();
+	void WinTurn();
+	void WinGame();
 
 	void InitWords();
 };

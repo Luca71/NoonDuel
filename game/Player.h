@@ -41,8 +41,6 @@ private:
 	bool mCanShoot;
 
 	std::vector<AnimatedTexture*> mStateTextures;
-
-	void ClearStateTextures();
 };
 
 
