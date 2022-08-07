@@ -6,6 +6,7 @@ StartScreen::StartScreen()
 	mTimer = Timer::Instance();
 	mInputMgr = InputManager::Instance();
 	mGameConfig = GameConfig::Instance();
+	mAudioMgr = AudioManager::Instance();
 
 	// Background
 	mBackground = new Texture("StartScreenBackground.png");
@@ -21,18 +22,20 @@ StartScreen::StartScreen()
 
 	mPlayText = new Texture("\'Enter\' to play", "DSRoundup.ttf", 50, { COLOR_DARKRED });
 	mPlayText->Position(Vector2(mGameConfig->winWidth * 0.51f, mGameConfig->winHeight * 0.807f));
+
+	PlayMusic();
 }
 
 StartScreen::~StartScreen()
 {
 	Timer::Release();
 	mTimer = nullptr;
-
 	InputManager::Release();
 	mInputMgr = nullptr;
-
 	GameConfig::Release();
 	mGameConfig = nullptr;
+	AudioManager::Release();
+	mAudioMgr = nullptr;
 
 	// Background
 	delete mBackground;
@@ -59,4 +62,9 @@ void StartScreen::Render()
 	mLogo->Render();
 	mPlayButton->Render();
 	mPlayText->Render();
+}
+
+void StartScreen::PlayMusic()
+{
+	mAudioMgr->PlayMusic("startScreen.mp3");
 }

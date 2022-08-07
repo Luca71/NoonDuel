@@ -1,6 +1,7 @@
 #ifndef _SCREENMANAGER_H
 #define _SCREENMANAGER_H
-#include "InputManager.h";
+#include "InputManager.h"
+#include "AudioManager.h"
 #include "../game/StartScreen.h"
 #include "../game/PlayScreen.h"
 
@@ -26,6 +27,7 @@ namespace EasySDL
 		enum SCREENS { start, play };
 
 		InputManager* mInputMgr;
+		AudioManager* mAudioMgr;
 
 		SCREENS mCurrentScreen;
 

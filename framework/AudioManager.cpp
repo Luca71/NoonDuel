@@ -55,6 +55,13 @@ namespace EasySDL
 	        Mix_ResumeMusic();
 	    }
 	}
+
+	bool AudioManager::IsMusicPaused()
+	{
+		if (Mix_PausedMusic() == 1) { return true; }
+		
+		return false;
+	}
 	
 	void AudioManager::PlaySFX(std::string filename, int loops /*= 0*/, int channel /*= 0*/)
 	{

@@ -3,6 +3,7 @@
 #include "../framework/AnimatedTexture.h"
 #include "../framework/InputManager.h"
 #include "../framework/GameConfig.h"
+#include "../framework/AudioManager.h"
 
 using namespace EasySDL;
 
@@ -16,12 +17,14 @@ public:
 	void Update();
 	void Render();
 
+	void PlayMusic();
 
 private:
 
 	Timer* mTimer;
 	InputManager* mInputMgr;
 	GameConfig* mGameConfig;
+	AudioManager* mAudioMgr;
 
 	// Background
 	Texture* mBackground;
@@ -33,7 +36,6 @@ private:
 	Texture* mPlayButton;
 	Texture* mPlayText;
 
-	// sound
 };
 
 

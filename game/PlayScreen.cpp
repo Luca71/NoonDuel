@@ -4,6 +4,7 @@ PlayScreen::PlayScreen()
 {
 	mTimer = Timer::Instance();
 	mInputMgr = InputManager::Instance();
+	mAudioMgr = AudioManager::Instance();
 	mGameConfig = GameConfig::Instance();
 
 	mCanShoot = false;
@@ -69,6 +70,15 @@ PlayScreen::PlayScreen()
 
 PlayScreen::~PlayScreen()
 {
+	AudioManager::Release();
+	mAudioMgr = nullptr;
+	Timer::Release();
+	mTimer = nullptr;
+	InputManager::Release();
+	mInputMgr = nullptr;
+	GameConfig::Release();
+	mGameConfig = nullptr;
+	
 	// Background
 	delete mBackground;
 	mBackground = nullptr;
@@ -159,6 +169,11 @@ void PlayScreen::NewGame()
 	mP2Score->ResetScore();
 }
 
+void PlayScreen::PlayMusic()
+{
+	mAudioMgr->PlayMusic("playScreen.mp3");
+}
+
 int PlayScreen::GetState()
 {
 	return mCurrentTurnState;
@@ -197,9 +212,9 @@ void PlayScreen::Update()
 			mWordsLabel->CanShoot(false);
 			if (mPlayer1->CanShoot())
 			{
+				mAudioMgr->PlaySFX("Shoot.wav");
+				
 				mP1Score->IncrementScore();
-
-				//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
 				
 				mPlayer1->SetState(Player::Shoot);
 				mPlayer2->CanShoot(false);
@@ -213,9 +228,9 @@ void PlayScreen::Update()
 			mWordsLabel->CanShoot(false);
 			if (mPlayer2->CanShoot())
 			{
+				mAudioMgr->PlaySFX("Shoot.wav");
+				
 				mP2Score->IncrementScore();
-
-				//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
 
 				mPlayer2->SetState(Player::Shoot);
 				mPlayer1->CanShoot(false);
@@ -233,12 +248,14 @@ void PlayScreen::Update()
 			{
 				mP1Fails[mPlayer1->GetFails()]->Active(true);
 				mPlayer1->IncrementFails();
+
+				mAudioMgr->PlaySFX("Fail.wav");
 			}
 			else
 			{
 				mP2Score->IncrementScore();
 
-				//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
+				mAudioMgr->PlaySFX("Fail.wav");
 
 				EndTurn(false);
 
@@ -250,18 +267,18 @@ void PlayScreen::Update()
 			{
 				mP2Fails[mPlayer2->GetFails()]->Active(true);
 				mPlayer2->IncrementFails();
+
+				mAudioMgr->PlaySFX("Fail.wav");
 			}
 			else
 			{
 				mP1Score->IncrementScore();
 
-				//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
+				mAudioMgr->PlaySFX("Fail.wav");
 
 				EndTurn(false);
 			}
 		}
-
-		//if (CheckPlayersScore()) { OnMatchWin(mPlayer1); }
 	}
 
 	mPlayer1->Update();
@@ -284,6 +301,7 @@ void PlayScreen::Update()
 
 	if (mInputMgr->KeyPressed(SDL_SCANCODE_SPACE) && mCurrentTurnState == end)
 	{
+		mAudioMgr->PlaySFX("click.wav");
 		StartTurn();
 	}
 

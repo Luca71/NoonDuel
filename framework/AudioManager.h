@@ -14,6 +14,7 @@ namespace EasySDL
 		void PlayMusic(std::string filename, int loops = -1);
 		void PauseMusic();
 		void ResumeMusic();
+		bool IsMusicPaused();
 	
 		void PlaySFX(std::string filename, int loops = 0, int channel = 0);
 	

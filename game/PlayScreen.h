@@ -2,6 +2,7 @@
 #define _PLAYSCREEN_H
 #include "../framework/AnimatedTexture.h"
 #include "../framework/InputManager.h"
+#include "../framework/AudioManager.h"
 #include "../framework/GameConfig.h"
 #include "Countdown.h"
 #include "Scoreboard.h"
@@ -23,6 +24,8 @@ public:
 	void EndTurn(bool win);
 	void NewGame();
 
+	void PlayMusic();
+
 	enum TURN_STATE { start, running, end, winGame };
 	int GetState();
 
@@ -30,6 +33,7 @@ private:
 
 	Timer* mTimer;
 	InputManager* mInputMgr;
+	AudioManager* mAudioMgr;
 	GameConfig* mGameConfig;
 
 	bool mCanShoot;

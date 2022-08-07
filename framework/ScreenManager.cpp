@@ -22,6 +22,7 @@ namespace EasySDL
 	ScreenManager::ScreenManager()
 	{
 		mInputMgr = InputManager::Instance();
+		mAudioMgr = AudioManager::Instance();
 
 		// For this game only
 		mStartScreen = new StartScreen();
@@ -32,7 +33,11 @@ namespace EasySDL
 
 	ScreenManager::~ScreenManager()
 	{
+		InputManager::Release();
 		mInputMgr = nullptr;
+
+		AudioManager::Release();
+		mAudioMgr = nullptr;
 
 		// For this game only
 		delete mStartScreen;
@@ -50,19 +55,29 @@ namespace EasySDL
 		{
 		case start:
 			mStartScreen->Update();
+
+			if (mAudioMgr->IsMusicPaused()) { mStartScreen->PlayMusic(); }
+
 			if (mInputMgr->KeyPressed(SDL_SCANCODE_RETURN))
 			{
 				mCurrentScreen = play;
 				mPlayScreen->StartTurn();
+				mAudioMgr->PauseMusic();
+				mAudioMgr->PlaySFX("click.wav");
 			}
 			break;
 
 		case play:
 			mPlayScreen->Update();
+
+			if (mAudioMgr->IsMusicPaused()) { mPlayScreen->PlayMusic(); }
+
 			if (mInputMgr->KeyPressed(SDL_SCANCODE_ESCAPE))
 			{
 				mPlayScreen->NewGame();
 				mCurrentScreen = start;
+				mAudioMgr->PauseMusic();
+				mAudioMgr->PlaySFX("click.wav");
 			}
 			break;
 		}
