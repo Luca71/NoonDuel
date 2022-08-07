@@ -5,7 +5,7 @@
 ## Two players shooter game - Test your reflexes
 </br>
 
-### C++ totally made game developed with EasySDL, my own game framework based on SDL2 library.
+### C++ totally made game developed with [EasySDL - Game framework](https://github.com/Luca71/EasySDL), my own game framework based on SDL2 library.
 </br>
 
 How to play:
