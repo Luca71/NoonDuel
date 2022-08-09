@@ -13,8 +13,3 @@ How to play:
 - If you shoot down your adversary, you earns one point.
 - If you failed two consecutive times in the same match, you lose 1 point.
 - The first player that reach 5 points wins the game.
-<br></br>
-
-Try the game:
-- download the compiled version [NoonDuel Game](Compiled/NoonDuel.zip)
-- Unzip in desktop and run NoonDuel.exe
